@@ -11,12 +11,10 @@
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="shell">
   <aside class="sidebar" id="sidebar">
     <div class="row" style="justify-content:space-between;align-items:center">
-      <div class="logo"><div class="logo-mark">W</div><span>What If.</span></div>
-      <button class="icon-btn" id="closeSidebar" style="display:none;width:36px;height:36px" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+      <a href="#/challenges" class="logo"><div class="logo-mark">W</div><span>What If.</span></a>
     </div>
     <div class="small muted" style="margin-top:6px;line-height:1.4">A text-only social network for hypothetical minds.</div>
     <nav class="nav" id="navDesktop"></nav>
@@ -27,8 +25,7 @@
   </aside>
   <div class="main">
     <header class="topbar">
-      <button class="hamburger" id="openSidebar" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
-      <div class="logo" id="logoTop"><div class="logo-mark">W</div><span>What If.</span></div>
+      <a href="#/challenges" class="logo" id="logoTop"><div class="logo-mark">W</div><span>What If.</span></a>
       <div class="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="searchInput" placeholder="Search challenges, stories, answers" autocomplete="off">
@@ -57,14 +54,14 @@
   </div>
 </div>
 
-<nav class="mobile-nav" id="mobileNav"></nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Bottom Navigation"></nav>
 
 <!-- Auth Modal -->
 <div class="modal" id="authModal" aria-hidden="true">
   <div class="modal-card">
     <div class="modal-head">
       <div style="font-weight:900;letter-spacing:-0.03em;font-size:18px" id="authTitle">Welcome to What If.</div>
-      <button class="icon-btn" id="closeAuth" style="width:32px;height:32px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+      <button class="icon-btn" id="closeAuth" style="width:32px;height:32px" aria-label="Close modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="tabs" style="margin-bottom:16px">
@@ -95,7 +92,7 @@
   <div class="modal-card">
     <div class="modal-head">
       <div style="font-weight:800">Report content</div>
-      <button class="icon-btn" id="closeReport" style="width:32px;height:32px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+      <button class="icon-btn" id="closeReport" style="width:32px;height:32px" aria-label="Close report modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <label class="label">Reason (10-500 chars)</label>
