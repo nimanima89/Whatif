@@ -3,7 +3,8 @@
 A production-ready, full-stack text-only social entertainment platform.
 
 ## Live App
-- Frontend + Backend: `http://localhost:3000` (served via single Express server)
+- Production: Cloudflare Workers deployment configured (the public URL is recorded here after the first deploy)
+- Local Node server: `http://localhost:3000`
 - API base: `/api/*`
 
 
@@ -25,22 +26,49 @@ A production-ready, full-stack text-only social entertainment platform.
 14. **Moderation & Admin** — report any content, admin dashboard (users, active users, challenges, answers, battles, stories, pending reports), dismiss/remove/restore/suspend, role-based auth.
 
 ## Tech Stack
-- **Backend:** Node 20 + Express 4, SQLite (better-sqlite3 style wrapper around sqlite3), bcryptjs, helmet, express-rate-limit, sanitize-html, uuid, cookie-parser.
+- **Backend:** Express 5, running either on Node 20+ or natively on Cloudflare Workers through the Workers Node.js HTTP compatibility layer.
+- **Database:** Cloudflare D1 in production (durable, serverless SQLite) and local `sqlite3` for Node development, behind the same adapter interface.
 - **Frontend:** Vanilla JS SPA (hash router), no build step, responsive (desktop sidebar + mobile bottom nav + topbar), system fonts + Fraunces/Inter via Google Fonts, inline SVG icons, no emojis.
 - **DB Schema:** users, sessions, challenges, answers, votes, replies, battles, battle_votes, stories, story_entries, story_votes, confessions, notifications, reports, xp_events, moderation_actions — with FKs, indexes, unique constraints, cascading.
 
 ## Security
-- Password hashing, secure session tokens (30d expiry), httpOnly SameSite Lax cookies, authorization on every mutation, input sanitization (sanitize-html strip all tags), XSS protection via textContent, SQL injection protection via prepared statements, rate limiting (auth 30/15min, writes 20/min, votes 30/min), duplicate vote/report prevention, role checks.
+- PBKDF2-SHA256 password hashing via Web Crypto (with bcrypt verification for legacy local records), secure session tokens (30d expiry), httpOnly/Secure/SameSite Lax production cookies, authorization on every mutation, input sanitization, prepared statements, rate limiting (auth 30/15min, writes 20/min, votes 30/min), duplicate vote/report prevention, and role checks.
 
 ## Design
 - Paper background #fdfbf7, ink #0f0f0f, accent #ff3b30, subtle borders, 16-22px radii, soft shadows, strong typography (Fraunces for display, Inter for body), clean cards, good spacing, restrained animations.
 
 ## Run Locally
+
+### Node + local SQLite
 ```bash
-npm install
-node server.js
+npm ci
+npm start
 # open http://localhost:3000
 ```
+
+Set `DATABASE_PATH=/path/to/data.db` to use a different SQLite file. Set `DISABLE_BOTS=true` to disable timed bot activity.
+
+### Cloudflare Worker + local D1
+```bash
+npm ci
+npm run db:migrate:local
+npm run dev:worker
+# open http://localhost:8787
+```
+
+## Deploy to Cloudflare
+
+The deployment serves the SPA through Workers Static Assets and routes `/api/*` to Express. Production data is stored permanently in D1.
+
+```bash
+npx wrangler login --device
+npx wrangler d1 create whatif-production --location weur
+# Put the returned database ID in wrangler.jsonc
+npm run db:migrate:remote
+npm run deploy:cloudflare
+```
+
+The checked-in migrations create the schema and load curated public seed content. They intentionally exclude existing sessions, known demo passwords, reports, notifications, and non-demo accounts from `data.db`.
 
 ## Testing
 All flows manually verified via API + UI:
