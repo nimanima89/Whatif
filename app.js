@@ -10,7 +10,7 @@ const app = express();
 let backgroundTasksEnabled = true;
 let secureCookies = process.env.NODE_ENV === 'production';
 
-app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false, xFrameOptions: false }));
 app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
