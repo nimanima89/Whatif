@@ -6,10 +6,6 @@ A production-ready, full-stack text-only social entertainment platform.
 - Frontend + Backend: `http://localhost:3000` (served via single Express server)
 - API base: `/api/*`
 
-## Demo Accounts
-- **Admin:** `admin / admin123` (access to /#/admin)
-- **Users:** `nova / password123`, `samir / password123`, `eli / password123`
-- Or create a new account — you get +25 XP instantly.
 
 ## Core Features Implemented (all working end-to-end)
 
