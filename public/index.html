@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What If — Text-only social entertainment</title>
+<meta name="description" content="What If is a text-only social platform for hypothetical scenarios, battles, stories and confessions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="logo"><div class="logo-mark">W</div><span>What If.</span></div>
+      <button class="icon-btn" id="closeSidebar" style="display:none;width:36px;height:36px" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+    </div>
+    <div class="small muted" style="margin-top:6px;line-height:1.4">A text-only social network for hypothetical minds.</div>
+    <nav class="nav" id="navDesktop"></nav>
+    <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--line);margin-top:18px">
+      <div id="sidebarUser" class="card pad" style="padding:12px"></div>
+      <div class="small muted" style="margin-top:10px;line-height:1.5">No follower counts. No algorithms. Just text, votes, and imagination.</div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="hamburger" id="openSidebar" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+      <div class="logo" id="logoTop"><div class="logo-mark">W</div><span>What If.</span></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchInput" placeholder="Search challenges, stories, answers" autocomplete="off">
+      </div>
+      <div class="top-actions">
+        <div class="pill xp hide-mobile" id="xpPill" style="display:none"><span id="xpText">0 XP</span><span style="opacity:.6">•</span><span id="levelText">Lvl 1</span></div>
+        <div class="pill hide-mobile" id="streakPill" style="display:none">
+          <svg class="streak-fire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3s4 3.2 4 7.2c0 2.8-1.8 5.3-4 6.8-2.2-1.5-4-4-4-6.8C8 6.2 12 3 12 3Z"/><path d="M12 14a2.2 2.2 0 0 0 2.2 2.2A2.2 2.2 0 0 0 12 18a2.2 2.2 0 0 0-2.2-2.2A2.2 2.2 0 0 0 12 14Z"/></svg>
+          <span id="streakText">0</span>
+        </div>
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 9a6 6 0 0 1 12 0c0 6-4 7-4 7H10s-4-1-4-7"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+          <span class="badge" id="notifBadge" style="display:none">0</span>
+        </button>
+        <div id="authButtons" class="row" style="gap:6px">
+          <button class="btn secondary small" id="loginBtn">Log in</button>
+          <button class="btn small" id="registerBtn">Join</button>
+        </div>
+        <div id="userMenu" style="display:none;align-items:center;gap:8px">
+          <button class="icon-btn" id="profileBtn" style="width:38px;height:38px;font-weight:800" aria-label="Profile"></button>
+          <button class="btn secondary small hide-mobile" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </header>
+    <div class="content" id="app"></div>
+  </div>
+</div>
+
+<nav class="mobile-nav" id="mobileNav"></nav>
+
+<!-- Auth Modal -->
+<div class="modal" id="authModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div style="font-weight:900;letter-spacing:-0.03em;font-size:18px" id="authTitle">Welcome to What If.</div>
+      <button class="icon-btn" id="closeAuth" style="width:32px;height:32px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" style="margin-bottom:16px">
+        <div class="tab active" data-tab="login">Log in</div>
+        <div class="tab" data-tab="register">Create account</div>
+      </div>
+      <form id="loginForm" style="display:block">
+        <label class="label">Username</label><input class="input" name="username" autocomplete="username" required>
+        <label class="label" style="margin-top:10px">Password</label><input class="input" name="password" type="password" autocomplete="current-password" required>
+        <button class="btn block" style="margin-top:14px" type="submit">Log in</button>
+        <div class="small muted" style="margin-top:10px;line-height:1.5">Demo admin: <b>admin / admin123</b> • Demo users: nova / samir / eli – password <b>password123</b></div>
+        <div id="loginError" class="small" style="color:var(--accent);margin-top:8px;display:none"></div>
+      </form>
+      <form id="registerForm" style="display:none">
+        <label class="label">Username (3-20, letters numbers _ )</label><input class="input" name="username" required>
+        <label class="label" style="margin-top:10px">Display name</label><input class="input" name="display_name" required>
+        <label class="label" style="margin-top:10px">Bio (optional)</label><input class="input" name="bio" placeholder="One line about your curiosity">
+        <label class="label" style="margin-top:10px">Password (min 6)</label><input class="input" name="password" type="password" required>
+        <button class="btn block" style="margin-top:14px" type="submit">Create account</button>
+        <div id="registerError" class="small" style="color:var(--accent);margin-top:8px;display:none"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal" id="reportModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div style="font-weight:800">Report content</div>
+      <button class="icon-btn" id="closeReport" style="width:32px;height:32px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <label class="label">Reason (10-500 chars)</label>
+      <textarea id="reportReason" class="input" style="min-height:90px;resize:vertical" placeholder="Describe why this violates community standards"></textarea>
+      <div class="row" style="margin-top:12px;justify-content:flex-end">
+        <button class="btn secondary small" id="cancelReport">Cancel</button>
+        <button class="btn small" id="submitReport">Submit report</button>
+      </div>
+      <div id="reportError" class="small" style="color:var(--accent);margin-top:8px;display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
