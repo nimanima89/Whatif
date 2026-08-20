@@ -1,34 +1,24 @@
-import sqlite3 from 'sqlite3';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
+let databaseFactory = null;
 let dbInstance = null;
+
+/**
+ * Configure the database adapter used by the shared application.
+ * The Node server supplies a sqlite3 adapter; Cloudflare Workers supplies D1.
+ */
+export function setDatabaseFactory(factory) {
+  if (typeof factory !== 'function') throw new TypeError('Database factory must be a function');
+  databaseFactory = factory;
+  dbInstance = null;
+}
 
 export async function getDb() {
   if (dbInstance) return dbInstance;
-  const dbPath = '/home/user/data.db';
-  // Use verbose
-  const sqlite = sqlite3.verbose();
-  dbInstance = new sqlite.Database(dbPath);
-  // Promisify
-  dbInstance.dbRun = (sql, params=[]) => new Promise((res, rej) => {
-    dbInstance.run(sql, params, function(err){ if(err) rej(err); else res(this); });
-  });
-  dbInstance.dbGet = (sql, params=[]) => new Promise((res, rej) => {
-    dbInstance.get(sql, params, (err,row)=> err?rej(err):res(row));
-  });
-  dbInstance.dbAll = (sql, params=[]) => new Promise((res, rej) => {
-    dbInstance.all(sql, params, (err,rows)=> err?rej(err):res(rows));
-  });
-  dbInstance.dbExec = (sql) => new Promise((res, rej) => {
-    dbInstance.exec(sql, (err)=> err?rej(err):res());
-  });
-  await initSchema(dbInstance);
+  if (!databaseFactory) throw new Error('Database has not been configured');
+  dbInstance = await databaseFactory();
   return dbInstance;
 }
 
-async function initSchema(db){
+export async function initSchema(db) {
   await db.dbExec(`PRAGMA foreign_keys = ON;`);
   await db.dbExec(`
     CREATE TABLE IF NOT EXISTS users (

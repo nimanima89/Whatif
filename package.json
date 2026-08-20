@@ -4,18 +4,33 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "dev:worker": "wrangler dev",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "deploy:cloudflare": "npm run deploy",
+    "deploy": "npm run db:migrate:remote && wrangler deploy"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
+    "express": "^5.2.1",
     "helmet": "^7.1.0",
-    "localtunnel": "^2.0.2",
     "sanitize-html": "^2.11.0",
-    "sqlite3": "^5.1.6",
-    "uuid": "^9.0.0"
+    "sqlite3": "^6.0.1",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.124.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "cloudflare": {
+    "bindings": {
+      "DB": {
+        "description": "Permanent D1 storage for accounts, challenges, answers, votes, stories, and moderation data."
+      }
+    }
   }
 }
