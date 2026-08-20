@@ -61,12 +61,19 @@ npm run dev:worker
 The deployment serves the SPA through Workers Static Assets and routes `/api/*` to Express. Production data is stored permanently in D1.
 
 ```bash
+npm ci
 npx wrangler login --device
-npx wrangler d1 create whatif-production --location weur
-# Put the returned database ID in wrangler.jsonc
-npm run db:migrate:remote
 npm run deploy:cloudflare
 ```
+
+That's the whole flow: `scripts/prepare-d1.js` (run automatically before every deploy) creates the `whatif-production` D1 database if it doesn't exist yet and writes its real ID into `wrangler.jsonc`, then the deploy script applies the migrations to remote D1 and publishes the Worker.
+
+Notes:
+- Only the first deploy needs the D1 bootstrap; afterwards `wrangler.jsonc` holds your real database ID and later deploys skip straight to migrations + upload.
+- Your production URL is `https://whatif-social-network.<your-subdomain>.workers.dev` (printed at the end of the deploy). The same URL format works for preview URLs.
+- `preview_database_id` is set to the same database as production so remote previews get a working D1 binding; if you use `wrangler dev` locally after a deploy, re-run `npm run db:migrate:local` once (local state lives under a fresh directory).
+- If `npm ci` fails while building the native `sqlite3` module, install with `npm ci --ignore-scripts` and continue — `sqlite3` is only used by the local Node dev server, never by the Worker, so the Cloudflare deploy doesn't need it.
+- Manual alternative (if you prefer to create the database yourself): run `npx wrangler d1 create whatif-production --location weur`, paste the returned ID as `database_id` in `wrangler.jsonc`, then run `npm run deploy:cloudflare`.
 
 The checked-in migrations create the schema and load curated public seed content. They intentionally exclude existing sessions, known demo passwords, reports, notifications, and non-demo accounts from `data.db`.
 

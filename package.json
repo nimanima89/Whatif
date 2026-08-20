@@ -9,7 +9,7 @@
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
     "deploy:cloudflare": "npm run deploy",
-    "deploy": "npm run db:migrate:remote && wrangler deploy"
+    "deploy": "node scripts/prepare-d1.js && npm run db:migrate:remote && wrangler deploy"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,8 +17,10 @@
     "express": "^5.2.1",
     "helmet": "^7.1.0",
     "sanitize-html": "^2.11.0",
-    "sqlite3": "^6.0.1",
     "uuid": "^14.0.2"
+  },
+  "optionalDependencies": {
+    "sqlite3": "^6.0.1"
   },
   "devDependencies": {
     "wrangler": "^4.124.0"
